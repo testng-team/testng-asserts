@@ -41,11 +41,34 @@ For new code or larger refactoring efforts, [AssertJ](https://assertj.github.io/
 ## Releasing
 
 Artifacts are published to Maven Central through the
-[Central Portal](https://central.sonatype.com/). The `deploy.yml` workflow runs
-`./mvnw clean deploy -Pdeploy` on every push to `main`:
+[Central Portal](https://central.sonatype.com/), using two workflows.
 
-* a `-SNAPSHOT` version publishes to the Central Portal snapshot repository;
-* a release (non-snapshot) version is staged and auto-published to Maven Central.
+### Snapshots (automatic)
+
+The `deploy.yml` workflow runs on every push to `main` and publishes the current
+`-SNAPSHOT` version to the Central Portal snapshot repository. It is guarded to only
+deploy when the project version ends with `-SNAPSHOT`, so release commits pushed to
+`main` are skipped (no double publish).
+
+### Releases (manual)
+
+The `release.yml` workflow performs a release on demand. From the GitHub
+*Actions* tab, select **Release → Run workflow** and optionally provide:
+
+* `releaseVersion` — the version to release (e.g. `1.0.0`). Defaults to the current
+  version without `-SNAPSHOT`.
+* `nextVersion` — the next development version (e.g. `1.0.1-SNAPSHOT`). Defaults to
+  the release patch + 1 with `-SNAPSHOT`.
+
+The workflow then sets the release version, builds and verifies, deploys the release
+to Maven Central (staged and auto-published), commits and pushes the `vX.Y.Z` tag,
+creates a matching GitHub Release with auto-generated notes, and finally bumps the
+version back to the next `-SNAPSHOT` on `main`.
+
+Remember to move the relevant entries from the `[Unreleased]` section of
+[`CHANGELOG.md`](CHANGELOG.md) into a new version section before releasing.
+
+### Required secrets
 
 The following repository (or organization) secrets must be configured:
 
