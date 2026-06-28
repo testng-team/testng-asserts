@@ -63,20 +63,20 @@
 
     <dependencies>
         <!--
-          The main code has NO runtime dependency: it only uses the JDK.
+          AssertJ is the only runtime dependency: org.testng.Assert delegates the
+          behaviour-identical assertions (assertNull/NotNull/Same/NotSame, assertThrows) to it.
           TestNG is required at test scope only, to run the assertion tests
           (annotations, runner) and for the collection helpers used by the tests.
         -->
         <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-            <version>[7.10.2,)</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
             <version>3.27.7</version>
+        </dependency>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>[7.10.2,)</version>
             <scope>test</scope>
         </dependency>
         <dependency>
