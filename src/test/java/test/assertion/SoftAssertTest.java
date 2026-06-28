@@ -63,10 +63,11 @@ public class SoftAssertTest {
       sa.assertAll();
       Assert.fail("Exception expected");
     } catch (AssertionError e) {
-      String[] lines = e.getMessage().split("\r?\n");
-      Assert.assertEquals(lines.length, 2);
-      lines[1] = lines[1].replaceFirst(message, "");
-      Assert.assertFalse(lines[1].contains(message));
+      // Exactly one assertion failed, so the user message is reported exactly once. (Line counting
+      // is avoided here because the delegated AssertJ failure messages span multiple lines.)
+      String report = e.getMessage();
+      Assert.assertTrue(report.contains(message), report);
+      Assert.assertEquals(report.indexOf(message), report.lastIndexOf(message), report);
     }
   }
 

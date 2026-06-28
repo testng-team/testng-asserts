@@ -59,9 +59,8 @@ public class Assert {
    * @param message the assertion error message
    */
   public static void assertTrue(boolean condition, String message) {
-    if (!condition) {
-      failNotEquals(condition, Boolean.TRUE, message);
-    }
+    // Delegated to AssertJ (behaviour-identical, only the failure message differs).
+    assertThat(condition).as(message).isTrue();
   }
 
   /**
@@ -81,9 +80,8 @@ public class Assert {
    * @param message the assertion error message
    */
   public static void assertFalse(boolean condition, String message) {
-    if (condition) {
-      failNotEquals(condition, Boolean.FALSE, message); // TESTNG-81
-    }
+    // Delegated to AssertJ (behaviour-identical, only the failure message differs).
+    assertThat(condition).as(message).isFalse();
   }
 
   /**
@@ -102,10 +100,9 @@ public class Assert {
    * @param realCause the original exception
    */
   public static void fail(String message, Throwable realCause) {
-    AssertionError ae = new AssertionError(message);
-    ae.initCause(realCause);
-
-    throw ae;
+    // Delegated to AssertJ (behaviour-identical: throws an AssertionError with the given message
+    // and cause).
+    org.assertj.core.api.Assertions.fail(message, realCause);
   }
 
   /**
@@ -114,7 +111,8 @@ public class Assert {
    * @param message the assertion error message
    */
   public static void fail(String message) {
-    throw new AssertionError(message);
+    // Delegated to AssertJ (behaviour-identical: throws an AssertionError with the given message).
+    org.assertj.core.api.Assertions.fail(message);
   }
 
   /** Fails a test with no message. */
