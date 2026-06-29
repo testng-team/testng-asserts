@@ -4,6 +4,9 @@ on:
     branches: [ main ]
     paths-ignore:
       - '**.md'
+concurrency:
+  group: deploy-snapshot
+  cancel-in-progress: false
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -20,7 +23,11 @@ jobs:
           server-password: MAVEN_PASSWORD
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
           gpg-passphrase: GPG_PASSPHRASE
-      - name: Deploy to Maven Central
+      - name: Resolve project version
+        id: ver
+        run: echo "version=$(./mvnw -q help:evaluate -Dexpression=project.version -DforceStdout)" >> "$GITHUB_OUTPUT"
+      - name: Deploy snapshot to Maven Central
+        if: ${{ endsWith(steps.ver.outputs.version, '-SNAPSHOT') }}
         run: ./mvnw --no-transfer-progress clean deploy -Pdeploy
         env:
           MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
