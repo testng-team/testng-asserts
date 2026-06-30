@@ -38,7 +38,9 @@ import java.util.stream.StreamSupport;
  * @deprecated TestNG no longer maintains its own assertion library. Use a dedicated assertion
  *     library such as <a href="https://assertj.github.io/doc/">AssertJ</a> instead. The OpenRewrite
  *     recipe {@code org.openrewrite.java.testing.testng.TestNgToAssertj} migrates the whole class
- *     automatically; see {@code docs/MIGRATING_ASSERTIONS.md} for details.
+ *     automatically; see <a
+ *     href="https://github.com/testng-team/testng-asserts/blob/main/docs/MIGRATING_ASSERTIONS.md">the
+ *     migration guide</a> for details.
  */
 @Deprecated
 public class Assert {
