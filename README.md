@@ -11,8 +11,10 @@ evolve and be released independently.
 
 * JDK 11 (or higher)
 
-The assertion classes themselves depend only on the JDK. TestNG is required at **test scope** only
-(to run the assertion tests via the TestNG runner).
+`org.testng.Assert` delegates the behaviour-identical assertions (`assertNull`/`assertNotNull`/
+`assertSame`/`assertNotSame`, `assertThrows`) to [AssertJ](https://assertj.github.io/doc/), so
+`assertj-core` is the only runtime dependency (brought transitively). TestNG is required at **test
+scope** only (to run the assertion tests via the TestNG runner).
 
 ## Usage
 
@@ -31,6 +33,8 @@ If you previously relied on `org.testng.Assert` / `org.testng.asserts.*` coming 
 `org.testng:testng`, add `org.testng:testng-asserts` explicitly.
 
 For new code or larger refactoring efforts, [AssertJ](https://assertj.github.io/doc/) is recommended.
+See [docs/MIGRATING_ASSERTIONS.md](docs/MIGRATING_ASSERTIONS.md) for the migration guide, including
+the automated OpenRewrite recipe.
 
 ## Building
 

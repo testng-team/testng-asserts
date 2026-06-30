@@ -36,7 +36,9 @@ public class AssertionTest {
             "onAfterAssert");
   }
 
-  @Test(expectedExceptions = AssertionError.class, expectedExceptionsMessageRegExp = "Raw test .*")
+  @Test(
+      expectedExceptions = AssertionError.class,
+      expectedExceptionsMessageRegExp = "(?s)\\[Raw test\\] .*")
   public void test2_fails() {
     try {
       rawAssertion.assertTrue(true);

@@ -437,7 +437,7 @@ public class AssertTest {
   @Test(
       description = "GITHUB-2080",
       expectedExceptions = AssertionError.class,
-      expectedExceptionsMessageRegExp = "test expected \\[true\\] but found \\[false\\]")
+      expectedExceptionsMessageRegExp = "(?s)\\[test\\] .*Expecting value to be true but was false")
   public void testAssertTrueMessage() {
     Assert.assertTrue(false, "test");
   }
@@ -445,7 +445,7 @@ public class AssertTest {
   @Test(
       description = "GITHUB-2080",
       expectedExceptions = AssertionError.class,
-      expectedExceptionsMessageRegExp = "test expected \\[false\\] but found \\[true\\]")
+      expectedExceptionsMessageRegExp = "(?s)\\[test\\] .*Expecting value to be false but was true")
   public void testAssertFalseMessage() {
     Assert.assertFalse(true, "test");
   }
