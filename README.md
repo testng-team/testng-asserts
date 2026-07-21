@@ -76,7 +76,7 @@ Remember to move the relevant entries from the `[Unreleased]` section of
 
 The following repository (or organization) secrets must be configured:
 
-* `MAVEN_USERNAME` / `MAVEN_PASSWORD` — a [Central Portal user token](https://central.sonatype.com/account)
+* `NEXUS_USERNAME` / `NEXUS_PASSWORD` — a [Central Portal user token](https://central.sonatype.com/account)
   (Account → Generate User Token). These are **not** the legacy OSSRH credentials.
 * `GPG_PRIVATE_KEY` — the ASCII-armored GPG private key used to sign artifacts.
 * `GPG_PASSPHRASE` — the passphrase for that key.
