@@ -36,12 +36,13 @@ public class SoftAssertTest {
 
   @DataProvider(name = "messages")
   public Object[][] getMessages() {
-    String hasMessage = "msg";
-    return new Object[][] {{hasMessage, hasMessage}, {null, "The following asserts failed:"}};
+    // A custom message is used as a prefix; a null message falls back to AssertJ's native
+    // "Multiple Failures" aggregated report.
+    return new Object[][] {{"msg", "msg"}, {null, "Multiple Failures"}};
   }
 
   @Test(dataProvider = "messages")
-  public void testDefaultMessage(String actualMsg, String expectedMsg) {
+  public void testDefaultMessage(String actualMsg, String expectedToken) {
     try {
       final SoftAssert sa = new SoftAssert();
       sa.assertTrue(false);
@@ -49,7 +50,11 @@ public class SoftAssertTest {
       Assert.fail();
     } catch (AssertionError exc) {
       Assert.assertNotNull(exc.getMessage());
-      Assert.assertTrue(exc.getMessage().startsWith(expectedMsg));
+      Assert.assertTrue(exc.getMessage().contains(expectedToken), exc.getMessage());
+      if (actualMsg != null) {
+        // A custom message is reported as a prefix of the aggregated failure report.
+        Assert.assertTrue(exc.getMessage().startsWith(actualMsg), exc.getMessage());
+      }
     }
   }
 
