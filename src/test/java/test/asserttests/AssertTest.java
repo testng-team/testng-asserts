@@ -640,4 +640,79 @@ public class AssertTest {
     assertNotEquals((Object) m1, (Object) m2);
     assertNotEquals(m1, m2);
   }
+
+  @Test(
+      description = "GITHUB-11",
+      expectedExceptions = AssertionError.class)
+  public void assertNotEqualsFloatArrayWithinDeltaFails() {
+    assertNotEquals(new float[] {1.0f, 2.0f}, new float[] {1.05f, 2.0f}, 0.1f);
+  }
+
+  @Test(description = "GITHUB-11")
+  public void assertNotEqualsFloatArrayOutsideDeltaPasses() {
+    assertNotEquals(new float[] {1.0f, 2.0f}, new float[] {1.5f, 2.0f}, 0.1f);
+  }
+
+  @Test(description = "GITHUB-11")
+  public void assertNotEqualsFloatArrayDifferentLengthPasses() {
+    assertNotEquals(new float[] {1.0f}, new float[] {1.0f, 2.0f}, 0.1f);
+  }
+
+  @Test(
+      description = "GITHUB-11",
+      expectedExceptions = AssertionError.class)
+  public void assertNotEqualsDoubleArrayWithinDeltaFails() {
+    assertNotEquals(new double[] {1.0, 2.0}, new double[] {1.05, 2.0}, 0.1);
+  }
+
+  @Test(description = "GITHUB-11")
+  public void assertNotEqualsDoubleArrayOutsideDeltaPasses() {
+    assertNotEquals(new double[] {1.0, 2.0}, new double[] {1.5, 2.0}, 0.1);
+  }
+
+  @Test(description = "GITHUB-14")
+  public void assertNotEqualsListVsSetSameContentFails() {
+    Collection<String> list = List.of("a", "b", "c");
+    Collection<String> set = new LinkedHashSet<>(list);
+    // assertEquals passes for these (same size + order); a failure here is a real regression, not
+    // swallowed by the expected AssertionError of the assertNotEquals under test.
+    assertEquals(list, set);
+    // assertNotEquals must be the exact inverse of assertEquals, so it must throw here.
+    assertThrows(AssertionError.class, () -> assertNotEquals(list, set));
+  }
+
+  @Test(description = "GITHUB-18")
+  public void assertEqualsStringShowsDiff() {
+    try {
+      assertEquals("Root", "Not Root", "Transform JSON");
+      fail("should have thrown");
+    } catch (AssertionError e) {
+      assertTrue(e.getMessage().contains("Transform JSON"), e.getMessage());
+      assertTrue(e.getMessage().contains("Not Root"), e.getMessage());
+    }
+  }
+
+  @Test(description = "GITHUB-8")
+  public void assertThrowsCoversAssertException() {
+    assertThrows(NullPointerException.class, () -> {
+      throw new NullPointerException();
+    });
+    IllegalStateException ex =
+        expectThrows(
+            IllegalStateException.class,
+            () -> {
+              throw new IllegalStateException("boom");
+            });
+    assertEquals(ex.getMessage(), "boom");
+  }
+
+  @Test(description = "GITHUB-10")
+  public void assertSameMessageIsExplicit() {
+    try {
+      assertSame(new String("foo"), "foo");
+      fail("should have thrown");
+    } catch (AssertionError e) {
+      assertTrue(e.getMessage().contains("same"), e.getMessage());
+    }
+  }
 }

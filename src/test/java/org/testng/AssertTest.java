@@ -349,9 +349,10 @@ public class AssertTest {
   }
 
   @Test(
-      description = "GITHUB-1935",
+      description = "GITHUB-1935, GITHUB-18",
       expectedExceptions = AssertionError.class,
-      expectedExceptionsMessageRegExp = "expected \\[y\\] but found \\[x\\]")
+      // String equality now delegates to AssertJ, which produces a readable diff (GITHUB-18).
+      expectedExceptionsMessageRegExp = "[\\s\\S]*expected: \"y\"[\\s\\S]*but was: \"x\"[\\s\\S]*")
   public void testInequalityMessage() {
     Assert.assertEquals("x", "y");
   }
