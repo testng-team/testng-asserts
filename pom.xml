@@ -63,8 +63,12 @@
 
     <dependencies>
         <!--
-          AssertJ is the only runtime dependency: org.testng.Assert delegates the
-          behaviour-identical assertions (assertNull/NotNull/Same/NotSame, assertThrows) to it.
+          AssertJ is the main runtime dependency: org.testng.Assert delegates the
+          behaviour-identical assertions (assertNull/NotNull/Same/NotSame, assertThrows) to it,
+          and org.testng.asserts.SoftAssert is backed by AssertJ's SoftAssertions.
+          opentest4j is required at runtime so AssertJ aggregates soft-assertion failures as an
+          AssertJMultipleFailuresError, which keeps each failure (and its root cause) as a
+          suppressed exception. AssertJ only declares it as "provided", so we promote it here.
           TestNG is required at test scope only, to run the assertion tests
           (annotations, runner) and for the collection helpers used by the tests.
         -->
@@ -72,6 +76,11 @@
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
             <version>3.27.7</version>
+        </dependency>
+        <dependency>
+            <groupId>org.opentest4j</groupId>
+            <artifactId>opentest4j</artifactId>
+            <version>1.3.0</version>
         </dependency>
         <dependency>
             <groupId>org.testng</groupId>
