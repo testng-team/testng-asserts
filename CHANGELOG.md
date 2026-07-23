@@ -19,6 +19,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `Assert.assertEquals(String, String, String)` now delegates to AssertJ, producing a readable
   character-level diff on mismatch. The failure message format changes accordingly
   ([#18](https://github.com/testng-team/testng-asserts/issues/18)).
+- `SoftAssert` is now backed by AssertJ's `SoftAssertions`: collected failures are aggregated with
+  AssertJ's native "Multiple Failures" report instead of the previous
+  `"The following asserts failed:"` format. A custom `assertAll(String)` message is kept as a
+  prefix, and each individual failure (with its root cause) is attached as a suppressed exception.
+  This adds `org.opentest4j:opentest4j` as a runtime dependency (AssertJ only declares it as
+  `provided`).
 
 ### Fixed
 
