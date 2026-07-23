@@ -670,7 +670,8 @@ public class Assert {
    * @param message the assertion error message
    */
   public static void assertEquals(String actual, String expected, String message) {
-    assertEquals((Object) actual, (Object) expected, message);
+    // Delegated to AssertJ to produce a readable character-level diff on mismatch (GITHUB-18).
+    assertThat(actual).as(message).isEqualTo(expected);
   }
 
   /**
@@ -1972,8 +1973,10 @@ public class Assert {
       return "Collections not equal: expected: " + expected + " and actual: " + actual;
     }
 
-    if (!Objects.equals(actual, expected)) {
-      return "Collections differ: expected " + expected + " but got " + actual;
+    // Mirror assertEquals(Collection): compare by size + element order so that assertNotEquals is
+    // the exact inverse of assertEquals, regardless of the collections' own equals() (GITHUB-14).
+    if (actual.size() != expected.size()) {
+      return "Collections differ in size: expected " + expected + " but got " + actual;
     }
 
     return getNotEqualReason(actual.iterator(), expected.iterator());
@@ -2302,6 +2305,92 @@ public class Assert {
     if (areEqual(actual, expected, delta)) {
       Assert.fail(format(actual, expected, message, false));
     }
+  }
+
+  /**
+   * Asserts that two float arrays are not equal within the given delta. If they are equal, an
+   * AssertionError is thrown.
+   *
+   * @param actual the actual value
+   * @param expected the expected value
+   * @param delta the absolute tolerable difference between the actual and expected values
+   */
+  public static void assertNotEquals(float[] actual, float[] expected, float delta) {
+    assertNotEquals(actual, expected, delta, null);
+  }
+
+  /**
+   * Asserts that two float arrays are not equal within the given delta. If they are equal, an
+   * AssertionError, with the given message, is thrown.
+   *
+   * @param actual the actual value
+   * @param expected the expected value
+   * @param delta the absolute tolerable difference between the actual and expected values
+   * @param message the assertion error message
+   */
+  public static void assertNotEquals(
+      float[] actual, float[] expected, float delta, String message) {
+    if (areEqual(actual, expected, delta)) {
+      Assert.fail(format(actual, expected, message, false));
+    }
+  }
+
+  private static boolean areEqual(float[] actual, float[] expected, float delta) {
+    if (actual == expected) {
+      return true;
+    }
+    if (actual == null || expected == null || actual.length != expected.length) {
+      return false;
+    }
+    for (int i = 0; i < expected.length; i++) {
+      if (!areEqual(actual[i], expected[i], delta)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /**
+   * Asserts that two double arrays are not equal within the given delta. If they are equal, an
+   * AssertionError is thrown.
+   *
+   * @param actual the actual value
+   * @param expected the expected value
+   * @param delta the absolute tolerable difference between the actual and expected values
+   */
+  public static void assertNotEquals(double[] actual, double[] expected, double delta) {
+    assertNotEquals(actual, expected, delta, null);
+  }
+
+  /**
+   * Asserts that two double arrays are not equal within the given delta. If they are equal, an
+   * AssertionError, with the given message, is thrown.
+   *
+   * @param actual the actual value
+   * @param expected the expected value
+   * @param delta the absolute tolerable difference between the actual and expected values
+   * @param message the assertion error message
+   */
+  public static void assertNotEquals(
+      double[] actual, double[] expected, double delta, String message) {
+    if (areEqual(actual, expected, delta)) {
+      Assert.fail(format(actual, expected, message, false));
+    }
+  }
+
+  private static boolean areEqual(double[] actual, double[] expected, double delta) {
+    if (actual == expected) {
+      return true;
+    }
+    if (actual == null || expected == null || actual.length != expected.length) {
+      return false;
+    }
+    for (int i = 0; i < expected.length; i++) {
+      if (!areEqual(actual[i], expected[i], delta)) {
+        return false;
+      }
+    }
+    return true;
   }
 
   public static void assertNotEquals(Set<?> actual, Set<?> expected) {
